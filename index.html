@@ -3,152 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KIVENIOO GLITCH | ULTIMATE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <title>KIVENIOO GLITCH | المائدة المستديرة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #020617; }
-        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #010409; }
+        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        .screen { display: none; flex-direction: column; align-items: center; text-align: center; width: 90%; max-width: 500px; animation: fadeIn 0.6s ease; }
-        .screen.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-        .header { font-family: 'Orbitron', sans-serif; font-size: 2.8rem; color: var(--neon); text-shadow: 3px 3px var(--glitch); margin-bottom: 30px; letter-spacing: 2px; }
-
-        .btn-main { 
-            background: rgba(0, 255, 204, 0.05); border: 2px solid var(--neon); color: var(--neon); 
-            padding: 15px 30px; margin: 10px; border-radius: 15px; cursor: pointer; 
-            font-size: 1.1rem; font-weight: 900; width: 100%; transition: 0.3s;
-            font-family: 'Cairo'; position: relative; overflow: hidden;
-        }
-        .btn-main:hover { background: var(--neon); color: black; box-shadow: 0 0 30px var(--neon); transform: translateY(-3px); }
+        /* شاشة البداية */
+        #setup-screen { position: absolute; inset: 0; background: var(--bg); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .btn-start { background: none; border: 2px solid var(--neon); color: var(--neon); padding: 15px 40px; border-radius: 10px; font-size: 1.5rem; cursor: pointer; font-weight: 900; margin: 10px; }
         
-        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .card { 
-            width: 90px; height: 130px; background: #111; border: 2px solid var(--neon); 
-            border-radius: 12px; display: flex; align-items: center; justify-content: center; 
-            font-size: 2.5rem; cursor: pointer; transition: 0.5s; transform-style: preserve-3d;
-        }
-        .card.revealed { transform: rotateY(180deg); border-color: var(--glitch); box-shadow: 0 0 15px var(--glitch); }
-        .card .val { display: none; color: var(--neon); font-family: 'Orbitron'; transform: rotateY(180deg); }
+        /* طاولة اللعب */
+        .table { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #0a192f 0%, #010409 100%); }
+
+        /* منطقة الورق اللي في النص */
+        .center-pile { width: 120px; height: 160px; display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; z-index: 50; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid #333; }
+
+        /* أماكن اللاعبين */
+        .player-slot { position: absolute; display: flex; flex-direction: column; align-items: center; transition: 0.5s; opacity: 0.4; }
+        .player-slot.active { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 10px var(--neon)); }
+
+        .p0 { bottom: 20px; } /* أنت */
+        .p1 { left: 10px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+        .p2 { top: 20px; transform: rotate(180deg); }
+        .p3 { right: 10px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+        .p4 { bottom: 150px; right: 20px; transform: rotate(-45deg); } /* لاعب خامس */
+
+        .cards-row { display: flex; gap: 5px; }
+        .card { width: 50px; height: 75px; background: #111; border: 1px solid var(--neon); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
+        .card .val { display: none; font-family: 'Orbitron'; }
         .card.revealed .val { display: block; }
-        .card.revealed .back { display: none; }
 
-        .settings-panel { position: absolute; top: 15px; right: 15px; z-index: 100; }
-        .settings-btn { background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--neon); opacity: 0.7; }
-        .settings-btn:hover { opacity: 1; transform: rotate(90deg); transition: 0.4s; }
+        .deck { border-style: dashed; background: #000; }
+        .discard { border-color: var(--glitch); color: var(--glitch); font-weight: bold; }
+        
+        #game-info { position: absolute; top: 10px; left: 10px; font-size: 0.8rem; color: var(--neon); }
     </style>
 </head>
-<body onclick="startMusic()">
+<body>
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="clickSound"><source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg"></audio>
-    <audio id="cardSound"><source src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" type="audio/mpeg"></audio>
-
-    <div class="settings-panel">
-        <button class="settings-btn" onclick="playSound('click'); showScreen('settings-screen')">⚙️</button>
+    <div id="setup-screen">
+        <h1 style="color:var(--glitch); font-family:'Orbitron';">KIVENIOO GLITCH</h1>
+        <p>كم لاعب على الطاولة؟</p>
+        <button class="btn-start" onclick="startGame(2)">2 لاعبين</button>
+        <button class="btn-start" onclick="startGame(3)">3 لاعبين</button>
+        <button class="btn-start" onclick="startGame(4)">4 لاعبين</button>
+        <button class="btn-start" onclick="startGame(5)">5 لاعبين</button>
+        <button class="btn-start" onclick="startGame(1)" style="border-color: gold; color: gold;">ضد الكمبيوتر (AI)</button>
     </div>
 
-    <div class="screen active" id="main-screen">
-        <div class="header">KIVENIOO</div>
-        <button class="btn-main" onclick="playSound('click'); showScreen('mode-screen')">بدء التحدي / START</button>
-        <button class="btn-main" onclick="playSound('click'); showScreen('settings-screen')">الإعدادات / SETTINGS</button>
-    </div>
+    <div id="game-info">الدور على: <span id="turn-name">-</span></div>
 
-    <div class="screen" id="mode-screen">
-        <div class="header" style="font-size: 1.5rem;">اختر النظام</div>
-        <button class="btn-main" onclick="playSound('click'); startGame('AI')">ضد الكمبيوتر</button>
-        <button class="btn-main" onclick="playSound('click'); startGame('Solo')">تدريب فردي</button>
-        <button class="btn-main" onclick="playSound('click'); showScreen('main-screen')" style="border-color: #555; color: #555;">رجوع</button>
-    </div>
-
-    <div class="screen" id="game-screen">
-        <div id="status" style="color: var(--neon); margin-bottom: 10px;">المود: <span id="current-mode"></span></div>
-        <div class="cards-grid">
-            <div class="card" id="c0" onclick="cardAction(0)"><span class="back">؟</span><span class="val"></span></div>
-            <div class="card" id="c1" onclick="cardAction(1)"><span class="back">؟</span><span class="val"></span></div>
-            <div class="card" id="c2" onclick="cardAction(2)"><span class="back">؟</span><span class="val"></span></div>
-            <div class="card" id="c3" onclick="cardAction(3)"><span class="back">؟</span><span class="val"></span></div>
+    <div class="table" id="board">
+        <div class="center-pile">
+            <div class="card deck" onclick="drawFromDeck()">سحب</div>
+            <div class="card discard" id="discard-pile"><span id="discard-val">؟</span></div>
+            <button onclick="checkSkru()" style="background:var(--glitch); border:none; color:white; border-radius:5px; cursor:pointer;">SKRU</button>
         </div>
-        <div style="margin-top: 25px; display: flex; gap: 10px; width: 100%;">
-            <button class="btn-main" style="padding: 12px;" onclick="playSound('click'); powerSpy()">👁️ بـص</button>
-            <button class="btn-main" style="padding: 12px; border-color: var(--glitch); color: var(--glitch);" onclick="playSound('click'); saySkru()">🔥 سـكرو</button>
-        </div>
-    </div>
 
-    <div class="screen" id="settings-screen">
-        <div class="header" style="font-size: 1.8rem;">SETTINGS</div>
-        <button class="btn-main" onclick="toggleMusic()">تشغيل/إيقاف الموسيقى 🎵</button>
-        <button class="btn-main" onclick="setLang('ar')">العربية</button>
-        <button class="btn-main" onclick="setLang('en')">English</button>
-        <button class="btn-main" onclick="playSound('click'); showScreen('main-screen')" style="margin-top: 20px;">خروج</button>
-    </div>
+        </div>
 
 <script>
-    let myCards = [];
-    let isSpying = false;
-    let musicStarted = false;
+    let players = [];
+    let currentPlayer = 0;
+    let drawnVal = null;
+    let isAI = false;
 
-    function playSound(type) {
-        if(type === 'click') document.getElementById('clickSound').play();
-        if(type === 'card') document.getElementById('cardSound').play();
+    function startGame(count) {
+        document.getElementById('setup-screen').style.display = 'none';
+        if (count === 1) { count = 2; isAI = true; } // لاعب ضد كمبيوتر
+        
+        for (let i = 0; i < count; i++) {
+            players.push({
+                id: i,
+                name: i === 0 ? "أنت" : (isAI ? "AI البوت" : `لاعب ${i+1}`),
+                cards: Array.from({length: 4}, () => Math.floor(Math.random() * 11))
+            });
+            createPlayerUI(i);
+        }
+        updateTurn();
     }
 
-    function startMusic() {
-        if (!musicStarted) {
-            document.getElementById('bgMusic').volume = 0.3;
-            document.getElementById('bgMusic').play();
-            musicStarted = true;
+    function createPlayerUI(id) {
+        const slot = document.createElement('div');
+        slot.className = `player-slot p${id}`;
+        slot.id = `slot-${id}`;
+        slot.innerHTML = `
+            <div style="font-size:0.7rem; margin-bottom:5px;">${players[id].name}</div>
+            <div class="cards-row">
+                ${[0,1,2,3].map(j => `<div class="card" id="p${id}-c${j}" onclick="playerAction(${id}, ${j})"><span class="val">${players[id].cards[j]}</span><span class="back">؟</span></div>`).join('')}
+            </div>
+        `;
+        document.getElementById('board').appendChild(slot);
+    }
+
+    function updateTurn() {
+        document.querySelectorAll('.player-slot').forEach(s => s.classList.remove('active'));
+        document.getElementById(`slot-${currentPlayer}`).classList.add('active');
+        document.getElementById('turn-name').innerText = players[currentPlayer].name;
+        
+        if (isAI && currentPlayer === 1) {
+            setTimeout(aiMove, 1500);
         }
     }
 
-    function toggleMusic() {
-        let m = document.getElementById('bgMusic');
-        m.paused ? m.play() : m.pause();
+    function drawFromDeck() {
+        if (drawnVal !== null) return;
+        drawnVal = Math.floor(Math.random() * 11);
+        alert(`${players[currentPlayer].name} سحب ورقة: ${drawnVal}`);
     }
 
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+    function playerAction(pId, cIndex) {
+        if (pId !== currentPlayer || drawnVal === null) return;
+        
+        let oldVal = players[pId].cards[cIndex];
+        players[pId].cards[cIndex] = drawnVal;
+        document.querySelector(`#p${pId}-c${cIndex} .val`).innerText = drawnVal;
+        document.getElementById('discard-val').innerText = oldVal;
+        
+        drawnVal = null;
+        nextTurn();
     }
 
-    function startGame(mode) {
-        document.getElementById('current-mode').innerText = mode;
-        myCards = Array.from({length: 4}, () => Math.floor(Math.random() * 11));
-        myCards.forEach((val, i) => {
-            document.querySelector(`#c${i} .val`).innerText = val;
-            document.getElementById(`c${i}`).classList.remove('revealed');
-        });
-        showScreen('game-screen');
+    function nextTurn() {
+        currentPlayer = (currentPlayer + 1) % players.length;
+        updateTurn();
     }
 
-    function powerSpy() {
-        isSpying = true;
-        document.getElementById('status').innerText = "اختر كارت لتبص عليه!";
-    }
-
-    function cardAction(i) {
-        if (isSpying) {
-            playSound('card');
-            const card = document.getElementById(`c${i}`);
-            card.classList.add('revealed');
-            setTimeout(() => { card.classList.remove('revealed'); isSpying = false; document.getElementById('status').innerText = "دورك الآن"; }, 1800);
+    function aiMove() {
+        // ذكاء اصطناعي بسيط: بيسحب ويبدل أكبر كارت عنده
+        drawnVal = Math.floor(Math.random() * 11);
+        let maxVal = Math.max(...players[1].cards);
+        let maxIdx = players[1].cards.indexOf(maxVal);
+        
+        if (drawnVal < maxVal) {
+            playerAction(1, maxIdx);
+        } else {
+            document.getElementById('discard-val').innerText = drawnVal;
+            drawnVal = null;
+            nextTurn();
         }
     }
 
-    function saySkru() {
-        playSound('card');
+    function checkSkru() {
+        alert("انتهت اللعبة! كشف الحقيقة...");
         document.querySelectorAll('.card').forEach(c => c.classList.add('revealed'));
-        let total = myCards.reduce((a, b) => a + b, 0);
-        setTimeout(() => { alert("KIVENIOO GLITCH Result: " + total); }, 500);
-    }
-
-    function setLang(lang) {
-        playSound('click');
-        document.body.dir = (lang === 'ar') ? "rtl" : "ltr";
-        alert(lang === 'ar' ? "تم ضبط اللغة" : "Language Updated");
+        let results = players.map(p => `${p.name}: ${p.cards.reduce((a,b)=>a+b,0)}`).join('\n');
+        alert(results);
     }
 </script>
 </body>
