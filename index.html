@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIVENIOO GLITCH | SKRU EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #050505; }
+        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; height: 100vh; }
+        
+        /* تأثير الـ Glitch للعنوان */
+        .header { margin-top: 20px; position: relative; font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--neon); text-shadow: 2px 2px var(--glitch); animation: glitch-anim 1s infinite; }
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .game-area { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; }
+        
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px; }
+        
+        .card { 
+            width: 100px; height: 150px; background: #111; border: 2px solid #333; 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; 
+            font-size: 2rem; cursor: pointer; transition: 0.4s; position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .card.active { border-color: var(--neon); box-shadow: 0 0 15px var(--neon); }
+        .card .val { display: none; font-family: 'Orbitron'; color: var(--neon); }
+        .card.revealed .val { display: block; }
+        .card.revealed .back { display: none; }
+        .card .back { color: #444; font-size: 1rem; }
+
+        .controls { background: #111; width: 100%; padding: 20px; border-top: 2px solid var(--neon); display: flex; justify-content: center; gap: 10px; }
+        
+        button { 
+            background: none; border: 2px solid var(--neon); color: var(--neon); 
+            padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'Cairo'; 
+            font-weight: bold; transition: 0.3s;
+        }
+        button:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+        .skru-btn { border-color: var(--glitch); color: var(--glitch); }
+        .skru-btn:hover { background: var(--glitch); color: white; box-shadow: 0 0 20px var(--glitch); }
+
+        #status { margin-bottom: 10px; font-weight: bold; color: var(--glitch); }
+    </style>
+</head>
+<body>
+
+<div class="header">KIVENIOO GLITCH</div>
+
+<div class="game-area">
+    <div id="status">جهز نفسك.. حاول تجمع أقل مجموع!</div>
+    <div class="cards-grid" id="grid">
+        <div class="card" onclick="cardClick(0)"><span class="back">؟</span><span class="val" id="v0"></span></div>
+        <div class="card" onclick="cardClick(1)"><span class="back">؟</span><span class="val" id="v1"></span></div>
+        <div class="card" onclick="cardClick(2)"><span class="back">؟</span><span class="val" id="v2"></span></div>
+        <div class="card" onclick="cardClick(3)"><span class="back">؟</span><span class="val" id="v3"></span></div>
+    </div>
+</div>
+
+<div class="controls">
+    <button onclick="powerSpy()">كشف كارت (بص)</button>
+    <button onclick="powerSwap()">تبديل سريع</button>
+    <button class="skru-btn" onclick="saySkru()">SKRU!</button>
+</div>
+
+<script>
+    // توزيع كروت عشوائية من 0 لـ 10
+    let myCards = [0, 0, 0, 0].map(() => Math.floor(Math.random() * 11));
+    let revealed = [false, false, false, false];
+    let isSpying = false;
+
+    // وضع القيم في الكروت
+    function updateDisplay() {
+        myCards.forEach((val, i) => {
+            document.getElementById(`v${i}`).innerText = val;
+        });
+    }
+
+    function cardClick(index) {
+        const cardElements = document.querySelectorAll('.card');
+        if (isSpying) {
+            cardElements[index].classList.add('revealed');
+            setTimeout(() => {
+                cardElements[index].classList.remove('revealed');
+                isSpying = false;
+                document.getElementById('status').innerText = "تمت الرؤية! العب الآن.";
+            }, 1500);
+        }
+    }
+
+    function powerSpy() {
+        isSpying = true;
+        document.getElementById('status').innerText = "اختر كارت لتبص عليه بسرعة...";
+    }
+
+    function powerSwap() {
+        // حركة "جليتش" تبديل عشوائي لزيادة الحماس
+        let i = Math.floor(Math.random() * 4);
+        let j = Math.floor(Math.random() * 4);
+        [myCards[i], myCards[j]] = [myCards[j], myCards[i]];
+        updateDisplay();
+        document.getElementById('status').innerText = "تم تبديل الكروت عشوائياً! تشويش!";
+    }
+
+    function saySkru() {
+        const cardElements = document.querySelectorAll('.card');
+        cardElements.forEach(c => c.classList.add('revealed'));
+        let total = myCards.reduce((a, b) => a + b, 0);
+        document.getElementById('status').innerText = `سكروو! مجموعك هو: ${total}`;
+        if (total < 10) {
+            document.getElementById('status').innerText += " - أنت وحش السكرو! 👑";
+        }
+    }
+
+    updateDisplay();
+</script>
+
+</body>
+</html>
