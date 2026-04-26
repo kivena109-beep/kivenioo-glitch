@@ -3,47 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KIVENIOO SKRU | الحريفة</title>
+    <title>KIVENIOO SKRU | CLEAR VIEW</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #020617; }
-        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: radial-gradient(circle, #0f172a 0%, #020617 100%); }
+        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle, #0f172a 0%, #020617 100%); }
         
-        /* شاشة البداية */
-        .screen { display: none; flex-direction: column; align-items: center; z-index: 100; text-align: center; }
+        /* شاشة الدخول */
+        .screen { display: none; flex-direction: column; align-items: center; z-index: 100; }
         .screen.active { display: flex; }
-        .logo { font-family: 'Orbitron'; font-size: 3.5rem; color: var(--neon); text-shadow: 4px 4px var(--glitch); margin-bottom: 30px; }
+        .logo { font-family: 'Orbitron'; font-size: 3rem; color: var(--neon); text-shadow: 3px 3px var(--glitch); margin-bottom: 20px; }
 
         /* الطاولة المستديرة */
-        .game-board { position: relative; width: 100vw; height: 100vh; display: none; }
+        .game-board { position: relative; width: 100vw; height: 100vh; display: none; overflow: hidden; }
         .game-board.active { display: block; }
 
-        /* الكروت */
-        .card { width: 55px; height: 85px; perspective: 1000px; cursor: pointer; position: relative; transition: 0.3s; }
+        /* الكروت - كبرنا الحجم عشان تبان */
+        .card { width: 70px; height: 100px; perspective: 1000px; cursor: pointer; position: relative; margin: 5px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
         
-        /* ضهر الورقة */
-        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.6rem; text-align: center; border-color: var(--neon); box-shadow: inset 0 0 10px var(--neon); }
-        .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 1.8rem; font-family: 'Orbitron'; font-weight: 900; }
+        /* ضهر الورقة باسمك - كبرنا الخط */
+        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.75rem; text-align: center; border-color: var(--neon); }
+        .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 2.2rem; font-family: 'Orbitron'; font-weight: 900; }
 
-        /* الأماكن (الـ 6 لاعبين) */
-        .player-slot { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 5px; opacity: 0.5; transition: 0.5s; }
-        .player-slot.active-turn { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 15px var(--neon)); }
+        /* توزيع اللاعبين - مسافات مدروسة */
+        .player-slot { position: absolute; display: flex; flex-direction: column; align-items: center; transition: 0.4s; }
+        .active-turn { filter: drop-shadow(0 0 15px var(--neon)); transform: scale(1.05); }
         
-        .p0 { bottom: 20px; left: 50%; transform: translateX(-50%); } /* أنت */
-        .p1 { top: 20px; left: 50%; transform: translateX(-50%) rotate(180deg); }
-        .p2 { left: 15px; top: 35%; transform: rotate(90deg); }
-        .p3 { right: 15px; top: 35%; transform: rotate(-90deg); }
-        .p4 { left: 15px; bottom: 20%; transform: rotate(90deg); }
-        .p5 { right: 15px; bottom: 20%; transform: rotate(-90deg); }
+        .p0 { bottom: 5%; left: 50%; transform: translateX(-50%); } /* أنت */
+        .p1 { top: 5%; left: 50%; transform: translateX(-50%) rotate(180deg); }
+        .p2 { left: 5%; top: 50%; transform: translateY(-50%) rotate(90deg); }
+        .p3 { right: 5%; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+        .p4 { left: 15%; top: 15%; transform: rotate(45deg); } 
+        .p5 { right: 15%; top: 15%; transform: rotate(-45deg); }
 
-        /* منطقة النص */
-        .center-pile { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 20px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px dashed var(--neon); }
+        /* منطقة النص (الكومة) */
+        .center-pile { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 20px; z-index: 50; }
         
-        .btn { background: none; border: 2px solid var(--neon); color: var(--neon); padding: 10px 25px; border-radius: 5px; cursor: pointer; font-family: 'Cairo'; font-weight: 900; margin: 10px; transition: 0.3s; }
-        .btn:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+        .btn { background: rgba(0,0,0,0.6); border: 2px solid var(--neon); color: var(--neon); padding: 12px 30px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: 900; margin: 10px; }
+        .btn:hover { background: var(--neon); color: black; }
     </style>
 </head>
 <body onclick="playMusic()">
@@ -52,22 +52,32 @@
 
     <div class="screen active" id="start-screen">
         <div class="logo">KIVENIOO</div>
-        <p>اختر عدد الحريفة على الطاولة</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button class="btn" onclick="initGame(1)">ضد الروبوت</button>
-            <button class="btn" onclick="initGame(2)">2 لاعيبة</button>
-            <button class="btn" onclick="initGame(4)">4 لاعيبة</button>
-            <button class="btn" onclick="initGame(6)">6 لاعيبة</button>
+        <p style="margin-bottom: 20px;">جاهز لسكرو الحريفة؟</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <button class="btn" onclick="initGame(2)">2 لاعبين</button>
+            <button class="btn" onclick="initGame(4)">4 لاعبين</button>
+            <button class="btn" onclick="initGame(6)">6 لاعبين</button>
+            <button class="btn" onclick="location.reload()" style="border-color: var(--glitch); color: var(--glitch);">إعادة</button>
         </div>
     </div>
 
     <div class="game-board" id="board">
         <div class="center-pile">
-            <div class="card" onclick="drawFromDeck()"><div class="card-inner"><div class="card-front">KIVENIOO<br>DECK</div></div></div>
-            <div class="card flipped" id="discard-pile"><div class="card-inner"><div class="card-back" id="discard-val">0</div></div></div>
+            <div class="card" onclick="drawFromDeck()">
+                <div class="card-inner">
+                    <div class="card-front" style="background: var(--glitch); border-color: #fff;">سحب<br>DRAW</div>
+                </div>
+            </div>
+            <div class="card flipped" id="discard-pile">
+                <div class="card-inner">
+                    <div class="card-back" id="discard-val">5</div>
+                </div>
+            </div>
         </div>
+
         <div id="players-wrapper"></div>
-        <button class="btn" style="position:absolute; bottom:140px; left:50%; transform:translateX(-50%); background:var(--glitch); border-color:var(--glitch); color:white;" onclick="handleSkru()">SKRU!</button>
+        
+        <button class="btn" style="position:absolute; bottom:160px; right: 20px; background:var(--glitch); border-color:#fff; color:white;" onclick="handleSkru()">SKRU!</button>
     </div>
 
 <script>
@@ -79,11 +89,9 @@
     function playMusic() { if(!isMusic){ let m=document.getElementById('bg-music'); m.volume=0.2; m.play(); isMusic=true; }}
 
     function initGame(num) {
-        let count = (num === 1) ? 2 : num;
         players = [];
         document.getElementById('players-wrapper').innerHTML = '';
-        
-        for(let i=0; i<count; i++) {
+        for(let i=0; i<num; i++) {
             players.push({ id: i, cards: Array.from({length: 4}, () => Math.floor(Math.random() * 11)) });
             renderPlayer(i);
         }
@@ -96,7 +104,7 @@
         const div = document.createElement('div');
         div.className = `player-slot p${id}`;
         div.id = `slot-${id}`;
-        div.innerHTML = `<div style="font-size:0.7rem; color:var(--neon);">${id === 0 ? 'أنت' : 'حريف ' + (id+1)}</div><div style="display:flex; gap:5px;">` + 
+        div.innerHTML = `<div style="font-size:0.8rem; font-weight:bold; color:white; background:rgba(0,0,0,0.5); padding:2px 10px; border-radius:10px; margin-bottom:5px;">${id === 0 ? 'أنت' : 'لاعب ' + (id+1)}</div><div style="display:flex;">` + 
             players[id].cards.map((v, ci) => `
                 <div class="card" id="p${id}-c${ci}" onclick="cardClick(${id}, ${ci})">
                     <div class="card-inner"><div class="card-front">KIVENIOO</div><div class="card-back">${v}</div></div>
@@ -112,35 +120,36 @@
     function drawFromDeck() {
         if(drawnCardVal !== null) return;
         drawnCardVal = Math.floor(Math.random() * 11);
-        alert("سحبت ورقة: " + drawnCardVal + "\nبدلها بكارت من بتوعك أو ارميها.");
+        alert("سحبت ورقة: " + drawnCardVal + "\nاضغط على كارت من بتوعك للتبديل.");
     }
 
     function cardClick(pIdx, cIdx) {
-        if(pIdx !== turn) return; // مش دورك
+        if(pIdx !== turn) return;
+        
+        const cardElement = document.getElementById(`p${pIdx}-c${cIdx}`);
         
         if(drawnCardVal === null) {
-            // قاعدة "البص": تقدر تبص على كارتك لو مدستش سحب
-            const c = document.getElementById(`p${pIdx}-c${cIdx}`);
-            c.classList.add('flipped');
-            setTimeout(() => c.classList.remove('flipped'), 1500);
+            // بصة سريعة
+            cardElement.classList.add('flipped');
+            setTimeout(() => cardElement.classList.remove('flipped'), 1200);
             return;
         }
 
-        // التبديل
-        let old = players[pIdx].cards[cIdx];
+        // تبديل حقيقي
+        let oldVal = players[pIdx].cards[cIdx];
         players[pIdx].cards[cIdx] = drawnCardVal;
-        document.querySelector(`#p${pIdx}-c${cIdx} .card-back`).innerText = drawnCardVal;
-        document.getElementById('discard-val').innerText = old;
-        drawnCardVal = null;
+        cardElement.querySelector('.card-back').innerText = drawnCardVal;
+        document.getElementById('discard-val').innerText = oldVal;
         
+        drawnCardVal = null;
         turn = (turn + 1) % players.length;
         updateTurnUI();
     }
 
     function handleSkru() {
         document.querySelectorAll('.card').forEach(c => c.classList.add('flipped'));
-        let res = players.map(p => `حريف ${p.id+1}: ${p.cards.reduce((a,b)=>a+b,0)}`).join('\n');
-        alert("انتهت اللعبة!\n" + res);
+        let res = players.map(p => `${p.id === 0 ? 'أنت' : 'لاعب '+(p.id+1)}: ${p.cards.reduce((a,b)=>a+b,0)}`).join('\n');
+        alert("GAME OVER!\n" + res);
     }
 </script>
 </body>
