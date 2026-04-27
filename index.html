@@ -3,124 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KIVENIOO SKRU | FIXED EDITION</title>
+    <title>KIVENIOO SKRU | VISIBLE DRAW</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #020617; }
+        :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #050505; }
         body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle, #111 0%, #000 100%); }
 
-        .screen { display: none; flex-direction: column; align-items: center; z-index: 100; text-align: center; }
+        .screen { display: none; flex-direction: column; align-items: center; text-align: center; }
         .screen.active { display: flex; }
         .logo { font-family: 'Orbitron'; font-size: 3.5rem; color: var(--neon); text-shadow: 4px 4px var(--glitch); margin-bottom: 20px; }
 
         .game-board { position: relative; width: 100vw; height: 100vh; display: none; flex-direction: column; justify-content: space-between; padding: 20px 0; }
         .game-board.active { display: flex; }
 
-        .card { width: 90px; height: 130px; perspective: 1000px; cursor: pointer; margin: 5px; }
+        .card { width: 85px; height: 125px; perspective: 1000px; cursor: pointer; margin: 5px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; border: 3px solid var(--neon); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.7); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; border: 3px solid var(--neon); display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         
-        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.8rem; font-weight: 900; text-align: center; }
-        .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 3rem; font-family: 'Orbitron'; font-weight: 900; }
+        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.7rem; }
+        .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 2.8rem; font-family: 'Orbitron'; font-weight: 900; }
 
-        .center-deck { display: flex; align-items: center; justify-content: center; gap: 40px; height: 180px; border-top: 1px solid #333; border-bottom: 1px solid #333; position: relative; }
-        .player-label { font-size: 1.2rem; font-weight: 900; color: var(--neon); margin: 10px 0; }
-        .active-player { box-shadow: 0 0 20px var(--neon); border-radius: 15px; background: rgba(0, 255, 204, 0.05); }
+        .center-area { display: flex; align-items: center; justify-content: center; gap: 30px; height: 180px; border-top: 1px solid #333; border-bottom: 1px solid #333; position: relative; }
+        
+        /* الورقة المسحوبة الجديدة */
+        #drawn-display { 
+            position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+            background: var(--glitch); color: white; padding: 5px 15px; border-radius: 10px;
+            font-family: 'Orbitron'; font-weight: 900; display: none; box-shadow: 0 0 15px var(--glitch);
+        }
 
-        .btn { background: rgba(0,255,204,0.1); border: 2px solid var(--neon); color: var(--neon); padding: 10px 30px; border-radius: 8px; cursor: pointer; font-weight: 900; }
+        .active-p { border: 2px solid var(--neon); border-radius: 15px; background: rgba(0,255,204,0.05); box-shadow: 0 0 15px var(--neon); }
+        .btn { background: rgba(0,255,204,0.1); border: 2px solid var(--neon); color: var(--neon); padding: 10px 30px; border-radius: 8px; cursor: pointer; font-weight: 900; margin-top: 10px;}
     </style>
 </head>
 <body>
 
     <div class="screen active" id="menu">
         <div class="logo">KIVENIOO</div>
-        <button class="btn" onclick="initGame(2)">ابدأ اللعب (2 لاعبين)</button>
+        <button class="btn" onclick="initGame(1)">ضد الروبوت (AI)</button>
+        <button class="btn" onclick="initGame(2)">2 لاعيبة</button>
+        <button class="btn" onclick="initGame(4)">4 لاعيبة</button>
     </div>
 
     <div class="game-board" id="board">
-        <div id="p1-area" style="display:flex; flex-direction:column; align-items:center; transform: rotate(180deg);">
-            <div id="p1-cards" style="display:flex;"></div>
-            <div class="player-label">الخصم</div>
+        <div id="top-row" style="display:flex; justify-content:center; transform: rotate(180deg);"></div>
+        
+        <div class="center-area">
+            <div id="drawn-display">سحبت: <span id="drawn-val-text">0</span></div>
+            
+            <div class="card" id="deck" onclick="handleDraw()" style="border-color: gold;"><div class="card-inner"><div class="card-front" style="color:gold">DECK</div></div></div>
+            <div class="card flipped"><div class="card-inner"><div class="card-back" id="discard">5</div></div></div>
+            
+            <div id="status" style="position:absolute; bottom:10px; color:var(--neon); font-size: 0.8rem; font-weight:bold;"></div>
         </div>
 
-        <div class="center-deck">
-            <div id="game-status" style="position:absolute; top: -30px; color:var(--glitch); font-weight:bold;"></div>
-            <div class="card" id="deck-card" onclick="drawCard()" style="border-color: gold;"><div class="card-inner"><div class="card-front" style="color:gold">DECK</div></div></div>
-            <div class="card flipped"><div class="card-inner"><div class="card-back" id="discard-val">0</div></div></div>
-            <button onclick="doSkru()" style="background:var(--glitch); color:white; border:none; padding:15px; border-radius:50%; font-weight:900; cursor:pointer;">SKRU</button>
-        </div>
-
-        <div id="p0-area" style="display:flex; flex-direction:column; align-items:center;">
-            <div id="p0-cards" style="display:flex;"></div>
-            <div class="player-label">أنت</div>
-        </div>
+        <div id="bottom-row" style="display:flex; justify-content:center;"></div>
+        <button onclick="endGame()" style="position:fixed; right:10px; bottom:10px; background:var(--glitch); border:none; color:white; padding:10px 20px; border-radius:20px; font-weight:900;">SKRU!</button>
     </div>
 
 <script>
     let players = [];
     let turn = 0;
-    let drawnVal = null;
+    let drawn = null;
+    let isAI = false;
 
     function initGame(num) {
+        isAI = (num === 1);
+        let count = isAI ? 2 : num;
         players = [];
-        document.getElementById('p1-cards').innerHTML = '';
-        document.getElementById('p0-cards').innerHTML = '';
-        for(let i=0; i<num; i++) {
-            players.push({ id: i, cards: [0,0,0,0].map(()=>Math.floor(Math.random()*11)) });
-            const target = i === 0 ? 'p0-cards' : 'p1-cards';
-            players[i].cards.forEach((v, ci) => {
-                document.getElementById(target).innerHTML += `
-                    <div class="card" id="p${i}-c${ci}" onclick="cardClick(${i}, ${ci})">
-                        <div class="card-inner"><div class="card-front">KIVENIOO</div><div class="card-back">${v}</div></div>
-                    </div>`;
-            });
+        document.getElementById('top-row').innerHTML = '';
+        document.getElementById('bottom-row').innerHTML = '';
+        for(let i=0; i<count; i++) {
+            players.push({ id: i, name: i===0?'أنت':(isAI?'الروبوت':'لاعب '+(i+1)), cards: [0,0,0,0].map(()=>Math.floor(Math.random()*11)) });
+            renderPlayer(i);
         }
         document.getElementById('menu').classList.remove('active');
         document.getElementById('board').classList.add('active');
         updateUI();
     }
 
+    function renderPlayer(id) {
+        const div = document.createElement('div');
+        div.id = `player-${id}`;
+        div.style.padding = "5px";
+        div.innerHTML = `<div style="display:flex">` + players[id].cards.map((v, ci) => `
+            <div class="card" id="p${id}-c${ci}" onclick="handleCard(${id}, ${ci})">
+                <div class="card-inner"><div class="card-front">KIVENIOO</div><div class="card-back">${v}</div></div>
+            </div>`).join('') + `</div>`;
+        if(id === 0) document.getElementById('bottom-row').appendChild(div);
+        else document.getElementById('top-row').appendChild(div);
+    }
+
     function updateUI() {
-        document.getElementById('p0-area').className = (turn === 0) ? 'active-player' : '';
-        document.getElementById('p1-area').className = (turn === 1) ? 'active-player' : '';
-        document.getElementById('game-status').innerText = (drawnVal !== null) ? "بدل كارتك الآن!" : "اسحب من الكومة أو بص على كارتك";
+        document.querySelectorAll('[id^="player-"]').forEach(el => el.classList.remove('active-p'));
+        document.getElementById(`player-${turn}`).classList.add('active-p');
+        document.getElementById('status').innerText = "دور: " + players[turn].name;
     }
 
-    function drawCard() {
-        if(drawnVal !== null) return;
-        drawnVal = Math.floor(Math.random()*11);
-        document.getElementById('deck-card').style.opacity = "0.5";
-        updateUI();
+    function handleDraw() {
+        if(drawn !== null || (isAI && turn === 1)) return;
+        drawn = Math.floor(Math.random()*11);
+        
+        // إظهار الرقم المسحوب فوق الكومة بوضوح
+        const display = document.getElementById('drawn-display');
+        document.getElementById('drawn-val-text').innerText = drawn;
+        display.style.display = "block";
+        
+        document.getElementById('status').innerText = "بدل الرقم بآي كارت عندك";
     }
 
-    function cardClick(pIdx, cIdx) {
-        if(pIdx !== turn) return; // ممنوع اللعب في دور الخصم
+    function handleCard(pIdx, cIdx) {
+        if(pIdx !== turn || (isAI && turn === 1)) return;
+        const c = document.getElementById(`p${pIdx}-c${cIdx}`);
         
-        const card = document.getElementById(`p${pIdx}-c${cIdx}`);
-        
-        if(drawnVal === null) {
-            // بصة (Peek)
-            card.classList.add('flipped');
-            setTimeout(() => card.classList.remove('flipped'), 1200);
+        if(drawn === null) {
+            c.classList.add('flipped');
+            setTimeout(() => c.classList.remove('flipped'), 1200);
         } else {
-            // تبديل (Swap) - هنا حل المشكلة
             let old = players[pIdx].cards[cIdx];
-            players[pIdx].cards[cIdx] = drawnVal;
-            card.querySelector('.card-back').innerText = drawnVal;
-            document.getElementById('discard-val').innerText = old;
+            players[pIdx].cards[cIdx] = drawn;
+            c.querySelector('.card-back').innerText = drawn;
+            document.getElementById('discard').innerText = old;
             
-            // تصفير السحب ونقل الدور
-            drawnVal = null;
-            document.getElementById('deck-card').style.opacity = "1";
-            turn = (turn === 0) ? 1 : 0;
+            // إخفاء الرقم المسحوب بعد التبديل
+            document.getElementById('drawn-display').style.display = "none";
+            drawn = null;
+            turn = (turn + 1) % players.length;
             updateUI();
         }
     }
 
-    function doSkru() {
+    function endGame() {
         document.querySelectorAll('.card').forEach(c => c.classList.add('flipped'));
-        alert("انتهت اللعبة!");
+        alert("GAME OVER!");
     }
 </script>
 </body>
