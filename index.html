@@ -3,178 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KIVENIOO SKRU | BALANCED</title>
+    <title>KIVENIOO SPY | THE GHOST PROTOCOL</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
-
-        /* شاشة البداية المتوازنة */
-        .screen { display: none; flex-direction: column; align-items: center; text-align: center; width: 90%; max-width: 400px; }
-        .screen.active { display: flex; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .logo { font-family: 'Orbitron'; font-size: 3rem; color: var(--neon); text-shadow: 3px 3px var(--glitch); margin-bottom: 15px; }
+        :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #050505; --card-bg: #111; }
         
-        .btn-opt { 
-            background: rgba(0, 255, 204, 0.05); border: 2px solid var(--neon); color: var(--neon); 
-            padding: 12px 30px; margin: 8px; border-radius: 10px; cursor: pointer; 
-            font-size: 1.1rem; font-weight: 900; width: 100%; transition: 0.3s; 
-        }
-        .btn-opt:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
-
-        .social { display: flex; gap: 30px; margin-top: 25px; font-size: 1.8rem; }
-        .social a { color: white; transition: 0.3s; opacity: 0.7; }
-        .social a:hover { color: var(--glitch); opacity: 1; transform: scale(1.1); }
-
-        /* الطاولة */
-        .game-board { position: relative; width: 100vw; height: 100vh; display: none; }
-        .game-board.active { display: block; }
-
-        /* كروت بحجم متوسط ومثالي */
-        .card { width: 75px; height: 110px; perspective: 1000px; cursor: pointer; position: relative; transition: 0.3s; margin: 3px; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
-        .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
-        
-        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.6rem; text-align: center; }
-        .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 2.2rem; font-family: 'Orbitron'; font-weight: 900; }
-
-        /* توزيع اللاعبين */
-        .slot { position: absolute; display: flex; flex-direction: column; align-items: center; transition: 0.4s; }
-        .s0 { bottom: 20px; left: 50%; transform: translateX(-50%); } 
-        .s1 { top: 20px; left: 50%; transform: translateX(-50%) rotate(180deg); }
-        .s2 { left: 10px; top: 40%; transform: rotate(90deg); }
-        .s3 { right: 10px; top: 40%; transform: rotate(-90deg); }
-        .s4 { left: 20%; top: 15%; transform: rotate(45deg); }
-
-        /* الكومة المركزية */
-        .center-pile { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 15px; padding: 10px; border-radius: 15px; }
-        
-        #drawn-display { 
-            position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
-            background: var(--glitch); color: white; padding: 4px 12px; border-radius: 8px;
-            font-size: 0.9rem; font-weight: 900; display: none; white-space: nowrap;
+        body { 
+            background: var(--bg); color: white; font-family: 'Cairo', sans-serif; 
+            margin: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center;
+            position: relative;
         }
 
-        .active-p { filter: drop-shadow(0 0 15px var(--neon)); opacity: 1 !important; }
-        .skru-btn { position: absolute; bottom: 150px; left: 50%; transform: translateX(-50%); background: var(--glitch); border: none; color: white; padding: 8px 20px; border-radius: 20px; font-weight: 900; cursor: pointer; }
+        /* شاشة البداية مع الخلفية الجديدة وتأثير الجليتش */
+        .screen.active#menu {
+            display: flex;
+            background-image: url('https://i.imgur.com/g0t6M5j.png'); /* رابط الصورة الخلفية */
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1;
+        }
+
+        /* تأثير التعتيم على الخلفية لزيادة وضوح العناصر */
+        .screen.active#menu::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* تعتيم بنسبة 70% */
+            z-index: -1;
+        }
+
+        /* تنسيق اسم KIVENIOO مع الجليتش */
+        .logo { 
+            font-family: 'Orbitron'; font-size: 3.5rem; color: var(--neon); 
+            text-shadow: 3px 3px var(--glitch); margin-bottom: 5px; position: relative;
+            animation: textGlitch 1s infinite;
+        }
+
+        @keyframes textGlitch {
+            0% { text-shadow: 3px 3px var(--glitch); }
+            50% { text-shadow: -3px -3px var(--neon); }
+            100% { text-shadow: 3px 3px var(--glitch); }
+        }
+
+        .screen { display: none; flex-direction: column; align-items: center; width: 90%; max-width: 400px; text-align: center; }
+        .screen.active { display: flex; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        /* كارت الدور الاحترافي */
+        .role-card {
+            width: 300px; height: 420px; perspective: 1000px; cursor: pointer; margin: 20px 0;
+        }
+        .card-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+        .role-card.revealed .card-inner { transform: rotateY(180deg); }
+
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border-radius: 20px; border: 3px solid var(--neon); display: flex; 
+            flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
+        }
+
+        .card-front { background: var(--card-bg); color: var(--neon); }
+        .card-back { 
+            background: #000; color: var(--glitch); transform: rotateY(180deg); 
+            border-color: var(--glitch); box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
+        }
+
+        /* الأزرار */
+        .btn {
+            background: transparent; border: 2px solid var(--neon); color: var(--neon);
+            padding: 15px 40px; border-radius: 10px; cursor: pointer; font-family: 'Cairo';
+            font-weight: 900; font-size: 1.1rem; transition: 0.3s; width: 100%; margin-top: 10px;
+        }
+        .btn:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+
+        .input-group { background: #222; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #444; width: 100%; }
+        input { background: transparent; border: none; color: var(--neon); font-family: 'Orbitron'; font-size: 1.5rem; text-align: center; width: 50px; outline: none; }
+
+        #timer { font-family: 'Orbitron'; font-size: 4rem; color: var(--glitch); text-shadow: 0 0 20px var(--glitch); margin: 20px 0; }
+
+        .social { display: flex; gap: 30px; margin-top: 40px; }
+        .social a { color: white; font-size: 2rem; transition: 0.3s; }
+        .social a:hover { color: var(--neon); transform: scale(1.2); }
     </style>
 </head>
-<body onclick="playMusic()">
-
-    <audio id="bg-music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
+<body>
 
     <div class="screen active" id="menu">
         <div class="logo">KIVENIOO</div>
-        <button class="btn-opt" onclick="startGame(1)">ضد الروبوت (AI)</button>
-        <button class="btn-opt" onclick="startGame(2)">2 لاعيبة</button>
-        <button class="btn-opt" onclick="startGame(3)">3 لاعيبة</button>
-        <button class="btn-opt" onclick="startGame(4)">4 لاعيبة</button>
-        <button class="btn-opt" onclick="startGame(5)">5 لاعيبة</button>
+        <div style="color: #ccc; letter-spacing: 2px; margin-bottom: 30px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">THE GHOST PROTOCOL</div>
         
+        <div class="input-group">
+            <div style="font-size: 0.9rem; color: #aaa; margin-bottom: 10px;">عدد اللاعبين</div>
+            <div style="display:flex; justify-content:center; align-items:center; gap:20px;">
+                <button onclick="changeCount(-1)" style="background:none; border:none; color:white; font-size:1.5rem;">-</button>
+                <input type="number" id="pCount" value="3" readonly>
+                <button onclick="changeCount(1)" style="background:none; border:none; color:white; font-size:1.5rem;">+</button>
+            </div>
+        </div>
+
+        <button class="btn" onclick="startGame()">ابدأ المهمة</button>
+
         <div class="social">
             <a href="https://www.youtube.com/@kivenioo" target="_blank"><i class="fab fa-youtube"></i></a>
             <a href="https://www.instagram.com/kivenioo" target="_blank"><i class="fab fa-instagram"></i></a>
         </div>
     </div>
 
-    <div class="game-board" id="board">
-        <div class="center-pile">
-            <div id="drawn-display">سحبت: <span id="drawn-val-text">0</span></div>
-            <div class="card" onclick="drawFromDeck()" style="border-color: gold;"><div class="card-inner"><div class="card-front" style="color:gold">DECK</div></div></div>
-            <div class="card flipped"><div class="card-inner"><div class="card-back" id="discard-val">0</div></div></div>
+    <div class="screen" id="role-screen">
+        <div id="pLabel" style="font-size: 1.5rem; color: var(--neon); margin-bottom: 10px;">اللاعب رقم 1</div>
+        <div class="role-card" id="card-box" onclick="toggleCard()">
+            <div class="card-inner">
+                <div class="card-front">
+                    <i class="fas fa-fingerprint" style="font-size: 5rem; margin-bottom: 20px;"></i>
+                    <p>المس للبصمة وكشف الهوية</p>
+                </div>
+                <div class="card-back">
+                    <i class="fas fa-user-secret" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                    <div id="role-val" style="font-weight: 900; font-size: 1.8rem;">؟؟؟؟</div>
+                </div>
+            </div>
         </div>
-        <div id="players-wrapper"></div>
-        <button class="skru-btn" onclick="handleSkru()">SKRU!</button>
+        <button class="btn" id="next-p-btn" style="visibility:hidden;" onclick="proceedToNext()">اللاعب التالي</button>
     </div>
 
-<script>
-    let players = [];
-    let turn = 0;
-    let drawn = null;
-    let isAI = false;
-    let musicStarted = false;
+    <div class="screen" id="game-screen">
+        <div class="logo" style="font-size: 2rem;">INVESTIGATION</div>
+        <div id="timer">05:00</div>
+        <p style="color: #888;">استجوبوا بعضكم.. الجاسوس بينكم!</p>
+        <button class="btn" onclick="location.reload()" style="border-color: var(--glitch); color: var(--glitch);">إنهاء التحقيق</button>
+    </div>
 
-    function playMusic() { if(!musicStarted){ let m=document.getElementById('bg-music'); m.volume=0.15; m.play(); musicStarted=true; }}
+    <script>
+        const places = ["مطار أسيوط", "فرح شعبي", "قسم الشرطة", "تحت الكوبري", "مستشفى المجانين", "مكتب المدير", "قلعة قايتباي", "مترو الأنفاق", "صالة الجيم", "داخل كود البرمجة", "المريخ"];
+        let playersCount, spyIdx, currentPlace, currentPlayer = 0;
+        let timerInt;
 
-    function startGame(num) {
-        isAI = (num === 1);
-        let count = isAI ? 2 : num;
-        players = [];
-        document.getElementById('players-wrapper').innerHTML = '';
-        for(let i=0; i<count; i++) {
-            players.push({ id: i, name: i===0?'أنت':(isAI?'الروبوت':'لاعب '+(i+1)), cards: [0,0,0,0].map(()=>Math.floor(Math.random()*11)) });
-            renderPlayer(i);
+        function changeCount(val) {
+            let input = document.getElementById('pCount');
+            let newVal = parseInt(input.value) + val;
+            if (newVal >= 3 && newVal <= 12) input.value = newVal;
         }
-        document.getElementById('menu').classList.remove('active');
-        document.getElementById('board').classList.add('active');
-        updateUI();
-    }
 
-    function renderPlayer(id) {
-        const slot = document.createElement('div');
-        slot.className = `slot s${id}`;
-        slot.id = `slot-${id}`;
-        slot.style.opacity = "0.5";
-        slot.innerHTML = `<div style="display:flex;">` + 
-            players[id].cards.map((v, ci) => `
-                <div class="card" id="p${id}-c${ci}" onclick="cardClick(${id}, ${ci})">
-                    <div class="card-inner"><div class="card-front">KIVENIOO</div><div class="card-back">${v}</div></div>
-                </div>`).join('') + `</div>`;
-        document.getElementById('players-wrapper').appendChild(slot);
-    }
-
-    function updateUI() {
-        document.querySelectorAll('.slot').forEach(s => s.classList.remove('active-p'));
-        document.getElementById(`slot-${turn}`).classList.add('active-p');
-        if(isAI && turn === 1) setTimeout(aiPlay, 1200);
-    }
-
-    function drawFromDeck() {
-        if(drawn !== null || (isAI && turn === 1)) return;
-        drawn = Math.floor(Math.random()*11);
-        document.getElementById('drawn-val-text').innerText = drawn;
-        document.getElementById('drawn-display').style.display = "block";
-    }
-
-    function cardClick(pIdx, cIdx) {
-        if(pIdx !== turn || (isAI && turn === 1)) return;
-        const c = document.getElementById(`p${pIdx}-c${cIdx}`);
-        if(drawn === null) {
-            c.classList.add('flipped');
-            setTimeout(() => c.classList.remove('flipped'), 1200);
-        } else {
-            let old = players[pIdx].cards[cIdx];
-            players[pIdx].cards[cIdx] = drawn;
-            c.querySelector('.card-back').innerText = drawn;
-            document.getElementById('discard-val').innerText = old;
-            document.getElementById('drawn-display').style.display = "none";
-            drawn = null;
-            turn = (turn + 1) % players.length;
-            updateUI();
+        function startGame() {
+            playersCount = parseInt(document.getElementById('pCount').value);
+            currentPlace = places[Math.floor(Math.random() * places.length)];
+            spyIdx = Math.floor(Math.random() * playersCount);
+            currentPlayer = 0;
+            showScreen('role-screen');
+            loadPlayer();
         }
-    }
 
-    function aiPlay() {
-        let aiDrawn = Math.floor(Math.random()*11);
-        let max = Math.max(...players[1].cards);
-        let idx = players[1].cards.indexOf(max);
-        if(aiDrawn < max) {
-            let old = players[1].cards[idx];
-            players[1].cards[idx] = aiDrawn;
-            document.getElementById(`p1-c${idx}`).querySelector('.card-back').innerText = aiDrawn;
-            document.getElementById('discard-val').innerText = old;
-        } else { document.getElementById('discard-val').innerText = aiDrawn; }
-        turn = 0;
-        updateUI();
-    }
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
 
-    function handleSkru() {
-        document.querySelectorAll('.card').forEach(c => c.classList.add('flipped'));
-        alert("انتهى اللعب! راجع النتائج على الكروت.");
-    }
-</script>
+        function loadPlayer() {
+            document.getElementById('pLabel').innerText = `اللاعب رقم ${currentPlayer + 1}`;
+            document.getElementById('card-box').classList.remove('revealed');
+            document.getElementById('next-p-btn').style.visibility = 'hidden';
+            document.getElementById('role-val').innerText = (currentPlayer === spyIdx) ? "أنت الجاسوس 🕵️‍♂️" : currentPlace;
+        }
+
+        function toggleCard() {
+            document.getElementById('card-box').classList.add('revealed');
+            document.getElementById('next-p-btn').style.visibility = 'visible';
+        }
+
+        function proceedToNext() {
+            currentPlayer++;
+            if (currentPlayer < playersCount) {
+                loadPlayer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            showScreen('game-screen');
+            let time = 300;
+            timerInt = setInterval(() => {
+                let m = Math.floor(time / 60);
+                let s = time % 60;
+                document.getElementById('timer').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                if (time-- <= 0) {
+                    clearInterval(timerInt);
+                    alert("انتهى الوقت! اكشفوا الجاسوس فوراً!");
+                }
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
