@@ -10,17 +10,8 @@
         :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #050505; }
         body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
 
-        /* جليتش الاسم */
-        .logo { 
-            font-family: 'Orbitron'; font-size: 3rem; color: var(--neon); 
-            text-shadow: 3px 3px var(--glitch); margin-bottom: 20px; 
-            position: relative; animation: master-glitch 1s infinite; z-index: 100;
-        }
-        @keyframes master-glitch {
-            0% { transform: translate(0); text-shadow: 2px 2px var(--glitch); }
-            40% { transform: translate(-1px, -1px); text-shadow: -2px -2px var(--neon); }
-            100% { transform: translate(0); }
-        }
+        .logo { font-family: 'Orbitron'; font-size: 3rem; color: var(--neon); text-shadow: 3px 3px var(--glitch); margin-bottom: 20px; animation: master-glitch 1s infinite; z-index: 100; }
+        @keyframes master-glitch { 0% { transform: translate(0); text-shadow: 2px 2px var(--glitch); } 40% { transform: translate(-1px, -1px); text-shadow: -2px -2px var(--neon); } 100% { transform: translate(0); } }
 
         .screen { display: none; flex-direction: column; align-items: center; text-align: center; width: 90%; max-width: 450px; z-index: 10; }
         .screen.active { display: flex; }
@@ -29,48 +20,37 @@
 
         .game-board { position: relative; width: 100vw; height: 100vh; display: none; background: #000; overflow: hidden; }
         .game-board.active { display: block; }
+        .fullscreen-btn { position: absolute; top: 20px; right: 20px; color: var(--neon); font-size: 1.5rem; cursor: pointer; z-index: 1000; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 50%; border: 1px solid var(--neon); }
 
-        /* زر تكبير الشاشة الجديد */
-        .fullscreen-btn {
-            position: absolute; top: 20px; right: 20px;
-            color: var(--neon); font-size: 1.5rem; cursor: pointer;
-            z-index: 1000; background: rgba(0,0,0,0.5);
-            padding: 10px; border-radius: 50%; border: 1px solid var(--neon);
-            transition: 0.3s;
-        }
-        .fullscreen-btn:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
-
-        .card { width: 65px; height: 95px; perspective: 1000px; cursor: pointer; position: relative; transition: 0.3s; margin: 3px; }
+        .card { width: 65px; height: 95px; perspective: 1000px; cursor: pointer; position: relative; margin: 3px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.7); }
-        
-        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.5rem; text-align: center; font-weight: 900; }
+        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.5rem; font-weight: 900; }
         .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 1.8rem; font-family: 'Orbitron'; font-weight: 900; }
-        .card-special { border-color: var(--glitch) !important; color: var(--glitch) !important; font-size: 1rem !important; }
-
-        .slot { position: absolute; display: flex; gap: 5px; align-items: center; transition: 0.4s; opacity: 0.5; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 10px; }
-        .active-turn { opacity: 1 !important; background: rgba(0, 255, 204, 0.05); box-shadow: 0 0 20px var(--neon); }
         
+        .slot { position: absolute; display: flex; gap: 5px; align-items: center; opacity: 0.5; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 10px; }
+        .active-turn { opacity: 1 !important; box-shadow: 0 0 20px var(--neon); }
         .s0 { bottom: 10px; left: 50%; transform: translateX(-50%); } 
         .s1 { top: 10px; left: 50%; transform: translateX(-50%) rotate(180deg); } 
         .s2 { left: 10px; top: 40%; transform: rotate(90deg); } 
         .s3 { right: 10px; top: 40%; transform: rotate(-90deg); }
         .s4 { left: 10px; top: 10%; transform: rotate(45deg); } 
 
-        .center-pile { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 15px; align-items: center; z-index: 50; }
-        
-        #msg-box { 
-            position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
-            background: var(--glitch); color: white; padding: 10px 20px; border-radius: 10px;
-            font-weight: 900; display: none; white-space: nowrap; font-size: 1.1rem;
-            box-shadow: 0 0 25px var(--glitch); z-index: 200; font-family: 'Orbitron';
-            border: 2px solid white; text-align: center;
-        }
+        .center-pile { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 15px; align-items: center; }
+        #msg-box { position: absolute; top: -80px; left: 50%; transform: translateX(-50%); background: var(--glitch); color: white; padding: 10px 20px; border-radius: 10px; font-weight: 900; display: none; box-shadow: 0 0 25px var(--glitch); z-index: 200; font-family: 'Orbitron'; border: 2px solid white; }
 
-        .skru-btn { position: absolute; bottom: 150px; right: 15px; background: var(--glitch); border: none; color: white; padding: 10px 20px; border-radius: 30px; font-weight: 900; cursor: pointer; z-index: 100; box-shadow: 0 0 10px var(--glitch); }
-        .social { display: flex; gap: 25px; margin-top: 15px; font-size: 2.2rem; }
-        .social a { color: white; transition: 0.3s; opacity: 0.7; }
+        /* ستايل لوحة النتيجة النهائية */
+        #result-screen {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95); border: 3px solid var(--neon); width: 85%; max-width: 400px;
+            padding: 20px; border-radius: 20px; z-index: 2000; display: none; text-align: center;
+            box-shadow: 0 0 50px var(--neon);
+        }
+        .score-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(0,255,204,0.3); font-size: 1.2rem; }
+        .winner-text { color: yellow; font-size: 2rem; text-shadow: 0 0 10px yellow; margin-bottom: 20px; }
+
+        .skru-btn { position: absolute; bottom: 150px; right: 15px; background: var(--glitch); border: none; color: white; padding: 10px 20px; border-radius: 30px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body onclick="initAudioContext()">
@@ -82,64 +62,40 @@
         <button class="btn-opt" onclick="startGame(3)"><i class="fas fa-user-friends"></i> 3 لاعيبة</button>
         <button class="btn-opt" onclick="startGame(4)"><i class="fas fa-user-group"></i> 4 لاعيبة</button>
         <button class="btn-opt" onclick="startGame(5)"><i class="fas fa-user-plus"></i> 5 لاعيبة</button>
-        
-        <div class="social">
-            <a href="https://www.youtube.com/@kivenioo" target="_blank"><i class="fab fa-youtube"></i></a>
-            <a href="https://www.instagram.com/kivenioo" target="_blank"><i class="fab fa-instagram"></i></a>
-        </div>
     </div>
 
     <div class="game-board" id="board">
         <div class="fullscreen-btn" onclick="toggleFullScreen()"><i class="fas fa-expand"></i></div>
-        
         <div class="center-pile">
             <div id="msg-box"></div>
-            <div class="card" onclick="drawFromDeck()" style="border-color: gold;"><div class="card-inner"><div class="card-front" style="color:gold">DECK</div></div></div>
+            <div class="card" onclick="drawFromDeck()" style="border-color: gold;"><div class="card-inner"><div class="card-front" style="color:gold">سحب</div></div></div>
             <div class="card flipped" onclick="throwDrawn()"><div class="card-inner"><div class="card-back" id="discard">5</div></div></div>
         </div>
         <div id="players-wrapper"></div>
-        <button class="skru-btn" onclick="callSkru()">SKRU! (-30)</button>
+        <button class="skru-btn" onclick="callSkru()">SKRU!</button>
+
+        <div id="result-screen">
+            <div class="logo" style="font-size: 1.5rem;">GAME OVER</div>
+            <div id="winner-name" class="winner-text"></div>
+            <div id="scores-list"></div>
+            <button class="btn-opt" onclick="location.reload()" style="margin-top: 20px;">العب تاني 🔄</button>
+        </div>
     </div>
 
 <script>
     let players = [], turn = 0, drawn = null, skru = false, musicStarted = false, isAI = false;
     let discardVal = 5;
-    const deckPool = [-1, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "🕵️‍♂️", "🔁", "👁️"];
+    const deckPool = [-1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, "🛡️", "🔁", "👁️"];
 
-    // وظيفة تكبير الشاشة
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                alert(`خطأ: ${err.message}`);
-            });
-        } else {
-            document.exitFullscreen();
-        }
-    }
-
-    function initAudioContext() {
-        if (musicStarted) return;
-        musicStarted = true;
-        const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3');
-        bgMusic.loop = true; bgMusic.volume = 0.05; bgMusic.play();
-    }
-
+    function toggleFullScreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    function initAudioContext() { if (musicStarted) return; musicStarted = true; let a = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3'); a.loop = true; a.volume = 0.05; a.play(); }
     function playSfx() { new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play(); }
 
     function startGame(num) {
-        playSfx();
-        isAI = (num === 1);
-        let count = isAI ? 2 : num;
-        players = [];
-        for(let i=0; i<count; i++) {
-            players.push({ id: i, name: i===0?'أنت':(isAI?'الروبوت':'لاعب '+(i+1)), cards: shuffle(4), isAI: (i===1 && isAI) });
-        }
-        renderBoard();
-        document.getElementById('menu').classList.remove('active');
-        document.getElementById('board').classList.add('active');
-        showMsg("تشويف: بص على كارتين بس!");
-        setTimeout(hideMsg, 3000);
-        updateTurn();
+        playSfx(); isAI = (num === 1); let count = isAI ? 2 : num; players = [];
+        for(let i=0; i<count; i++) { players.push({ id: i, name: i===0?'أنت':(isAI?'الروبوت':'لاعب '+(i+1)), cards: shuffle(4) }); }
+        renderBoard(); document.getElementById('menu').classList.remove('active'); document.getElementById('board').classList.add('active');
+        showMsg("شوف أول كارتين!"); setTimeout(hideMsg, 3000); updateTurn();
     }
 
     function shuffle(n) { return Array.from({length: n}, () => deckPool[Math.floor(Math.random() * deckPool.length)]); }
@@ -147,76 +103,46 @@
     function renderBoard() {
         document.getElementById('players-wrapper').innerHTML = players.map(p => `
             <div class="slot s${p.id}" id="slot-${p.id}">
-                <div style="font-size:0.6rem; color:var(--neon); margin-bottom:3px; font-weight:bold;">${p.name}</div>
-                <div style="display:flex">
-                    ${p.cards.map((v, ci) => `
-                        <div class="card" id="p${p.id}-c${ci}" onclick="handleCard(${p.id}, ${ci})">
-                            <div class="card-inner">
-                                <div class="card-front">KIVENIOO</div>
-                                <div class="card-back ${isNaN(v) || v > 6 ? 'card-special' : ''}">${v}</div>
-                            </div>
-                        </div>`).join('')}
-                </div>
+                <div style="font-size:0.6rem; color:var(--neon); margin-bottom:3px;">${p.name}</div>
+                <div style="display:flex">${p.cards.map((v, ci) => `
+                    <div class="card" id="p${p.id}-c${ci}" onclick="handleCard(${p.id}, ${ci})">
+                        <div class="card-inner"><div class="card-front">KIVENIOO</div><div class="card-back">${v}</div></div>
+                    </div>`).join('')}</div>
             </div>`).join('');
-    }
-
-    function updateTurn() {
-        document.querySelectorAll('.slot').forEach(s => s.classList.remove('active-turn'));
-        document.getElementById(`slot-${turn}`).classList.add('active-turn');
-        if(isAI && turn === 1) setTimeout(aiPlay, 2000);
     }
 
     function drawFromDeck() {
         if(drawn !== null || (isAI && turn === 1)) return;
-        playSfx();
-        drawn = deckPool[Math.floor(Math.random() * deckPool.length)];
-        showMsg("سحبت: <span style='font-size:1.8rem; color:yellow;'>" + drawn + "</span>");
+        playSfx(); drawn = deckPool[Math.floor(Math.random() * deckPool.length)];
+        showMsg("سحبت: <span style='color:yellow;'>" + drawn + "</span>");
     }
 
     function throwDrawn() {
         if(drawn === null || (isAI && turn === 1)) return;
-        playSfx();
-        discardVal = drawn;
-        document.getElementById('discard').innerHTML = drawn;
-        drawn = null;
-        hideMsg();
-        nextTurn();
+        playSfx(); discardVal = drawn; document.getElementById('discard').innerHTML = drawn; drawn = null; hideMsg(); nextTurn();
     }
 
     function handleCard(pIdx, cIdx) {
-        playSfx();
-        let clickedVal = players[pIdx].cards[cIdx];
-        if(drawn === null && String(clickedVal) == String(discardVal)) {
-            showMsg("بصرة!");
-            players[pIdx].cards.splice(cIdx, 1);
-            renderBoard();
-            setTimeout(hideMsg, 1500);
-            return;
+        playSfx(); let clickedVal = players[pIdx].cards[cIdx];
+        if(drawn === null && clickedVal == discardVal) {
+            showMsg("بصرة!"); players[pIdx].cards.splice(cIdx, 1); renderBoard(); return;
         }
         if(pIdx !== turn || (isAI && turn === 1)) return;
         if(drawn !== null) {
-            let old = players[pIdx].cards[cIdx];
-            players[pIdx].cards[cIdx] = drawn;
-            discardVal = old;
-            document.getElementById('discard').innerHTML = old;
-            drawn = null;
-            hideMsg();
-            renderBoard();
+            let old = players[pIdx].cards[cIdx]; players[pIdx].cards[cIdx] = drawn;
+            discardVal = old; document.getElementById('discard').innerHTML = old; drawn = null; hideMsg(); renderBoard();
             if(skru && turn === players.length-1) endGame(); else nextTurn();
         } else {
-            const c = document.getElementById(`p${pIdx}-c${cIdx}`);
-            c.classList.add('flipped');
+            const c = document.getElementById(`p${pIdx}-c${cIdx}`); c.classList.add('flipped');
             setTimeout(() => c.classList.remove('flipped'), 1200);
         }
     }
 
     function nextTurn() { turn = (turn + 1) % players.length; updateTurn(); }
-    function aiPlay() {
-        let aiDD = deckPool[Math.floor(Math.random()*deckPool.length)];
-        document.getElementById('discard').innerHTML = players[1].cards[0];
-        players[1].cards[0] = aiDD;
-        renderBoard();
-        if(skru) endGame(); else nextTurn();
+    function updateTurn() {
+        document.querySelectorAll('.slot').forEach(s => s.classList.remove('active-turn'));
+        document.getElementById(`slot-${turn}`).classList.add('active-turn');
+        if(isAI && turn === 1) setTimeout(() => { let d = deckPool[Math.floor(Math.random()*deckPool.length)]; discardVal = players[1].cards[0]; players[1].cards[0] = d; document.getElementById('discard').innerHTML = discardVal; renderBoard(); if(skru) endGame(); else nextTurn(); }, 1500);
     }
 
     function showMsg(t) { let m=document.getElementById('msg-box'); m.innerHTML=t; m.style.display="block"; }
@@ -225,7 +151,30 @@
 
     function endGame() {
         document.querySelectorAll('.card').forEach(c => c.classList.add('flipped'));
-        alert("انتهت الجولة! احسب سكورك.");
+        
+        // حساب السكور لكل لاعب
+        let results = players.map(p => {
+            let score = p.cards.reduce((sum, v) => {
+                if (v === "🛡️") return sum + 0;
+                if (isNaN(v)) return sum + 10; // كروت الأكشن بـ 10
+                return sum + parseInt(v);
+            }, 0);
+            return { name: p.name, score: score };
+        });
+
+        // ترتيب اللعيبة من الأقل للأكبر
+        results.sort((a, b) => a.score - b.score);
+
+        // إظهار النتائج
+        document.getElementById('winner-name').innerText = "البطل هو: " + results[0].name + " 🏆";
+        document.getElementById('scores-list').innerHTML = results.map((r, i) => `
+            <div class="score-row">
+                <span>#${i+1} ${r.name}</span>
+                <span style="color:var(--neon)">${r.score} نقطة</span>
+            </div>
+        `).join('');
+
+        document.getElementById('result-screen').style.display = "block";
     }
 </script>
 </body>
