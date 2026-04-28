@@ -3,51 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KIVENIOO SCRO PRO | ULTIMATE</title>
+    <title>KIVENIOO SCRO PRO | FAST END</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #050505; }
         body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
-        
         .logo { font-family: 'Orbitron'; font-size: 2.2rem; color: var(--neon); text-shadow: 2px 2px var(--glitch); margin-bottom: 20px; text-align: center; }
-
         .screen { display: none; flex-direction: column; align-items: center; width: 90%; max-width: 450px; z-index: 10; }
         .screen.active { display: flex; }
-
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-        .btn-opt { 
-            background: rgba(0, 255, 204, 0.1); border: 2px solid var(--neon); color: var(--neon); 
-            padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 900; 
-            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-opt:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); transform: translateY(-2px); }
-
+        .btn-opt { background: rgba(0, 255, 204, 0.1); border: 2px solid var(--neon); color: var(--neon); padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 900; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-opt:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
         .game-board { position: relative; width: 100vw; height: 100vh; display: none; background: #000; overflow: hidden; }
         .game-board.active { display: block; }
         .fs-btn { position: absolute; top: 15px; right: 15px; color: var(--neon); font-size: 1.3rem; cursor: pointer; z-index: 1000; border: 1px solid var(--neon); padding: 10px; border-radius: 50%; background: rgba(0,0,0,0.5); }
-
         .card { width: 52px; height: 75px; perspective: 1000px; cursor: pointer; margin: 2px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 6px; border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; }
         .card-front { background: #000; color: var(--neon); font-size: 0.4rem; font-family: 'Orbitron'; }
         .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 1.4rem; font-family: 'Orbitron'; font-weight: 900; }
-
         .slot { position: absolute; display: flex; flex-direction: column; align-items: center; opacity: 0.4; transition: 0.4s; }
         .active-turn { opacity: 1 !important; filter: drop-shadow(0 0 10px var(--neon)); background: rgba(0,255,204,0.05); border-radius: 10px; padding: 5px; }
-        
-        /* توزيع 6 لاعبين */
         .s0 { bottom: 10px; left: 50%; transform: translateX(-50%); } 
         .s1 { top: 10px; left: 50%; transform: translateX(-50%) rotate(180deg); } 
         .s2 { left: 10px; top: 25%; transform: rotate(90deg); }
         .s3 { right: 10px; top: 25%; transform: rotate(-90deg); }
         .s4 { left: 10px; top: 65%; transform: rotate(90deg); }
         .s5 { right: 10px; top: 65%; transform: rotate(-90deg); }
-
         .center-pile { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 20px; align-items: center; }
         #msg-box { position: absolute; top: -80px; left: 50%; transform: translateX(-50%); background: var(--glitch); color: white; padding: 10px 15px; border-radius: 8px; font-weight: bold; display: none; text-align: center; border: 2px solid white; z-index: 500; min-width: 180px; box-shadow: 0 0 15px var(--glitch); }
-        
         #result-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.95); border: 3px solid var(--neon); width: 85%; max-width: 380px; padding: 25px; border-radius: 20px; z-index: 2000; display: none; text-align: center; }
         .skru-btn { position: absolute; bottom: 120px; right: 20px; background: var(--glitch); border: none; color: white; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 0 10px var(--glitch); }
     </style>
@@ -74,7 +60,7 @@
             <div class="card flipped" onclick="handleDiscardClick()"><div class="card-inner"><div class="card-back" id="discard">5</div></div></div>
         </div>
         <div id="players-wrapper"></div>
-        <button class="skru-btn" onclick="callSkru()">SKRU!</button>
+        <button class="skru-btn" id="skru-trigger" onclick="callSkru()">SKRU!</button>
 
         <div id="result-screen">
             <h2 style="color:var(--neon); font-family:'Orbitron'">GAME OVER</h2>
@@ -85,7 +71,7 @@
     </div>
 
 <script>
-    let players = [], turn = 0, drawn = null, skru = false, isAI = false, musicStarted = false;
+    let players = [], turn = 0, drawn = null, skruBy = null, isAI = false, musicStarted = false;
     let discardVal = 5;
     const deckPool = [-1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, "🔁", "👁️"];
 
@@ -118,7 +104,7 @@
     function drawFromDeck() {
         if(drawn !== null || (isAI && turn !== 0)) return;
         sfx(); drawn = deckPool[Math.floor(Math.random()*deckPool.length)];
-        showMsg("سحبت: <span style='color:yellow'>" + drawn + "</span><br>بدله أو ارميه في الأرض");
+        showMsg("سحبت: <span style='color:yellow'>" + drawn + "</span><br>بدله أو ارميه");
     }
 
     function handleDiscardClick() {
@@ -127,7 +113,7 @@
         if (drawn !== null) {
             discardVal = drawn;
             document.getElementById('discard').innerText = drawn;
-            drawn = null; hideMsg(); nextTurn();
+            drawn = null; hideMsg(); checkNext();
         } else {
             drawn = discardVal;
             showMsg("سحبت من الأرض: " + drawn);
@@ -144,7 +130,7 @@
             discardVal = old;
             document.getElementById('discard').innerText = old;
             drawn = null; hideMsg(); render();
-            if(skru && turn === players.length-1) endGame(); else nextTurn();
+            checkNext();
         } else {
             if(drawn === null && players[pIdx].cards[cIdx] == discardVal) {
                 showMsg("بصرة! 🔥"); players[pIdx].cards.splice(cIdx, 1); render(); 
@@ -155,23 +141,42 @@
         }
     }
 
-    function nextTurn() { turn = (turn + 1) % players.length; updateTurn(); }
+    function callSkru() {
+        if (skruBy !== null) return;
+        skruBy = turn;
+        showMsg("SKRU! آخر دور للجميع");
+        sfx();
+        document.getElementById('skru-trigger').style.display = 'none';
+        checkNext(); // نقل الدور فوراً بعد الضغط
+    }
+
+    function checkNext() {
+        let nextTurn = (turn + 1) % players.length;
+        // لو الدور الجاي هو اللي بدأ السكرو، يبقى الجيم خلص فوراً
+        if (skruBy !== null && nextTurn === skruBy) {
+            endGame();
+        } else {
+            turn = nextTurn;
+            updateTurn();
+        }
+    }
+
     function updateTurn() {
         document.querySelectorAll('.slot').forEach(s => s.classList.remove('active-turn'));
         document.getElementById(`slot-${turn}`).classList.add('active-turn');
-        if(isAI && turn === 1) setTimeout(aiMove, 1500);
+        if(isAI && turn === 1) setTimeout(aiMove, 1200);
     }
 
     function aiMove() {
         let old = players[1].cards[0];
         players[1].cards[0] = deckPool[Math.floor(Math.random()*deckPool.length)];
         discardVal = old; document.getElementById('discard').innerText = old;
-        render(); if(skru) endGame(); else nextTurn();
+        render(); 
+        checkNext();
     }
 
     function showMsg(t) { let m=document.getElementById('msg-box'); m.innerHTML=t; m.style.display="block"; }
     function hideMsg() { document.getElementById('msg-box').style.display="none"; }
-    function callSkru() { skru = true; showMsg("آخر دور لكل اللاعبين!"); sfx(); }
 
     function endGame() {
         document.querySelectorAll('.card').forEach(c => c.classList.add('flipped'));
