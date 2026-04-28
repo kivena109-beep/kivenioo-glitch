@@ -3,63 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KIVENIOO SCRO PRO | 6 PLAYERS</title>
+    <title>KIVENIOO SCRO PRO | BIG MENU</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --neon: #00ffcc; --glitch: #ff0055; --bg: #050505; }
         body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
         
-        .logo { font-family: 'Orbitron'; font-size: 2rem; color: var(--neon); text-shadow: 2px 2px var(--glitch); margin-bottom: 15px; animation: glitch 1s infinite; }
-        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-1px, 1px); } 100% { transform: translate(0); } }
+        .logo { font-family: 'Orbitron'; font-size: 3rem; color: var(--neon); text-shadow: 3px 3px var(--glitch); margin-bottom: 30px; animation: glitch 1s infinite; text-align: center; }
+        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 100% { transform: translate(0); } }
 
-        .screen { display: none; flex-direction: column; align-items: center; text-align: center; width: 95%; max-width: 500px; z-index: 10; }
+        .screen { display: none; flex-direction: column; align-items: center; text-align: center; width: 90%; max-width: 600px; z-index: 10; }
         .screen.active { display: flex; }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-        .btn-opt { background: rgba(0, 255, 204, 0.1); border: 2px solid var(--neon); color: var(--neon); padding: 10px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 900; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-opt:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+
+        /* تعديل الخيارات لتكون أكبر وأوضح */
+        .menu-container { width: 100%; display: flex; flex-direction: column; gap: 15px; }
+        .btn-opt { 
+            background: rgba(0, 255, 204, 0.05); 
+            border: 3px solid var(--neon); 
+            color: var(--neon); 
+            padding: 20px; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            font-size: 1.4rem; 
+            font-weight: 900; 
+            transition: 0.4s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+        .btn-opt i { font-size: 1.8rem; }
+        .btn-opt:hover { 
+            background: var(--neon); 
+            color: black; 
+            box-shadow: 0 0 30px var(--neon); 
+            transform: scale(1.03);
+        }
 
         .game-board { position: relative; width: 100vw; height: 100vh; display: none; background: #000; overflow: hidden; }
         .game-board.active { display: block; }
-        .fullscreen-btn { position: absolute; top: 15px; right: 15px; color: var(--neon); font-size: 1.2rem; cursor: pointer; z-index: 1000; border: 1px solid var(--neon); padding: 8px; border-radius: 50%; }
+        .fullscreen-btn { position: absolute; top: 20px; right: 20px; color: var(--neon); font-size: 1.5rem; cursor: pointer; z-index: 1000; border: 2px solid var(--neon); padding: 10px; border-radius: 50%; background: rgba(0,0,0,0.6); }
 
-        /* الكروت بحجم أصغر لتناسب 6 لاعبين */
-        .card { width: 55px; height: 80px; perspective: 1000px; cursor: pointer; margin: 2px; }
+        .card { width: 60px; height: 85px; perspective: 1000px; cursor: pointer; margin: 3px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 6px; border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.7); }
-        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.4rem; }
-        .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 1.5rem; font-family: 'Orbitron'; font-weight: 900; }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.7); }
+        .card-front { background: #000; color: var(--neon); font-family: 'Orbitron'; font-size: 0.5rem; }
+        .card-back { background: #fff; color: #000; transform: rotateY(180deg); font-size: 1.6rem; font-family: 'Orbitron'; font-weight: 900; }
 
-        /* أماكن اللاعبين الـ 6 */
-        .slot { position: absolute; display: flex; flex-direction: column; align-items: center; opacity: 0.4; transition: 0.4s; padding: 5px; border-radius: 10px; }
-        .active-turn { opacity: 1 !important; box-shadow: 0 0 15px var(--neon); background: rgba(0,255,204,0.05); }
+        .slot { position: absolute; display: flex; flex-direction: column; align-items: center; opacity: 0.4; transition: 0.4s; padding: 8px; border-radius: 12px; }
+        .active-turn { opacity: 1 !important; box-shadow: 0 0 20px var(--neon); background: rgba(0,255,204,0.1); border: 1px solid var(--neon); }
         
-        .s0 { bottom: 10px; left: 50%; transform: translateX(-50%); } /* أنت */
-        .s1 { top: 10px; left: 50%; transform: translateX(-50%) rotate(180deg); } 
-        .s2 { left: 10px; top: 25%; transform: rotate(90deg); }
-        .s3 { right: 10px; top: 25%; transform: rotate(-90deg); }
-        .s4 { left: 10px; top: 65%; transform: rotate(90deg); }
-        .s5 { right: 10px; top: 65%; transform: rotate(-90deg); }
+        /* التوزيع لـ 6 لاعبين */
+        .s0 { bottom: 15px; left: 50%; transform: translateX(-50%); } 
+        .s1 { top: 15px; left: 50%; transform: translateX(-50%) rotate(180deg); } 
+        .s2 { left: 15px; top: 25%; transform: rotate(90deg); }
+        .s3 { right: 15px; top: 25%; transform: rotate(-90deg); }
+        .s4 { left: 15px; top: 60%; transform: rotate(90deg); }
+        .s5 { right: 15px; top: 60%; transform: rotate(-90deg); }
 
-        .center-pile { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 15px; align-items: center; z-index: 100; }
-        #msg-box { position: absolute; top: -70px; left: 50%; transform: translateX(-50%); background: var(--glitch); color: white; padding: 8px 15px; border-radius: 8px; font-weight: 900; display: none; font-size: 1rem; border: 2px solid white; z-index: 200; }
-        #result-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.95); border: 3px solid var(--neon); width: 85%; max-width: 350px; padding: 20px; border-radius: 20px; z-index: 2000; display: none; text-align: center; }
-        .skru-btn { position: absolute; bottom: 120px; right: 15px; background: var(--glitch); border: none; color: white; padding: 10px 20px; border-radius: 30px; font-weight: 900; cursor: pointer; }
+        .center-pile { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 20px; align-items: center; z-index: 100; }
+        #msg-box { position: absolute; top: -90px; left: 50%; transform: translateX(-50%); background: var(--glitch); color: white; padding: 12px 25px; border-radius: 12px; font-weight: 900; display: none; font-size: 1.2rem; border: 2px solid white; z-index: 200; box-shadow: 0 0 20px var(--glitch); }
+        #result-screen { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.95); border: 4px solid var(--neon); width: 85%; max-width: 400px; padding: 30px; border-radius: 25px; z-index: 2000; display: none; text-align: center; box-shadow: 0 0 50px var(--neon); }
+        .skru-btn { position: absolute; bottom: 140px; right: 20px; background: var(--glitch); border: none; color: white; padding: 15px 25px; border-radius: 40px; font-weight: 900; cursor: pointer; font-size: 1.2rem; box-shadow: 0 0 15px var(--glitch); }
     </style>
 </head>
 <body onclick="startMusic()">
 
     <div class="screen active" id="menu">
         <div class="logo">KIVENIOO SCRO PRO</div>
-        <div class="menu-grid">
-            <button class="btn-opt" onclick="startGame(1)"><i class="fas fa-robot"></i> ضد الروبوت</button>
-            <button class="btn-opt" onclick="startGame(2)"><i class="fas fa-user"></i> 2 لاعبين</button>
+        <div class="menu-container">
+            <button class="btn-opt" onclick="startGame(1)"><i class="fas fa-robot"></i> ضد الروبوت (AI)</button>
+            <button class="btn-opt" onclick="startGame(2)"><i class="fas fa-user-friends"></i> 2 لاعبين</button>
             <button class="btn-opt" onclick="startGame(3)"><i class="fas fa-users"></i> 3 لاعبين</button>
             <button class="btn-opt" onclick="startGame(4)"><i class="fas fa-users-cog"></i> 4 لاعبين</button>
-            <button class="btn-opt" onclick="startGame(5)"><i class="fas fa-users-rays"></i> 5 لاعبين</button>
-            <button class="btn-opt" onclick="startGame(6)"><i class="fas fa-fire"></i> 6 لاعبين</button>
+            <button class="btn-opt" onclick="startGame(6)"><i class="fas fa-fire"></i> 6 لاعبين (الأساطير)</button>
         </div>
+        <p style="color: var(--neon); margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">إصدار KIVENIOO المطور V3.0</p>
     </div>
 
     <div class="game-board" id="board">
@@ -73,10 +95,10 @@
         <button class="skru-btn" onclick="callSkru()">SKRU!</button>
 
         <div id="result-screen">
-            <div class="logo" style="font-size: 1.2rem;">النتائج النهائية</div>
-            <div id="winner-name" style="color:yellow; font-size:1.5rem; margin-bottom:15px;"></div>
-            <div id="scores-list" style="font-size:0.9rem"></div>
-            <button class="btn-opt" onclick="location.reload()" style="margin-top: 15px; width:100%">العب تاني 🔄</button>
+            <div class="logo" style="font-size: 1.8rem;">ترتيب الأبطال</div>
+            <div id="winner-name" style="color:yellow; font-size:1.8rem; margin-bottom:20px; text-shadow: 0 0 10px yellow;"></div>
+            <div id="scores-list" style="font-size:1.2rem; text-align: right; padding: 0 20px;"></div>
+            <button class="btn-opt" onclick="location.reload()" style="margin-top: 25px; width:100%; background: var(--glitch); color: white; border-color: white;">العب دور جديد 🔄</button>
         </div>
     </div>
 
@@ -100,7 +122,7 @@
     function render() {
         document.getElementById('players-wrapper').innerHTML = players.map(p => `
             <div class="slot s${p.id}" id="slot-${p.id}">
-                <div style="color:var(--neon); font-size:0.6rem; margin-bottom:2px; font-weight:bold;">${p.name}</div>
+                <div style="color:var(--neon); font-size:0.7rem; margin-bottom:4px; font-weight:bold;">${p.name}</div>
                 <div style="display:flex">${p.cards.map((v, ci) => `
                     <div class="card" id="p${p.id}-c${ci}" onclick="handleCard(${p.id}, ${ci})">
                         <div class="card-inner"><div class="card-front">KIVENIOO</div><div class="card-back">${v}</div></div>
@@ -131,9 +153,8 @@
             drawn = null; hideMsg(); render();
             if(skru && turn === players.length-1) endGame(); else nextTurn();
         } else {
-            // بصرة أو تشويف
             if(drawn === null && players[pIdx].cards[cIdx] == discardVal) {
-                showMsg("بصرة!"); players[pIdx].cards.splice(cIdx, 1); render(); return;
+                showMsg("بصرة! 🔥"); players[pIdx].cards.splice(cIdx, 1); render(); return;
             }
             const c = document.getElementById(`p${pIdx}-c${cIdx}`);
             c.classList.add('flipped'); setTimeout(() => c.classList.remove('flipped'), 1000);
@@ -156,13 +177,13 @@
 
     function showMsg(t) { let m=document.getElementById('msg-box'); m.innerHTML=t; m.style.display="block"; }
     function hideMsg() { document.getElementById('msg-box').style.display="none"; }
-    function callSkru() { skru = true; showMsg("آخر دور!"); sfx(); }
+    function callSkru() { skru = true; showMsg("آخر دور للجميع!"); sfx(); }
 
     function endGame() {
         document.querySelectorAll('.card').forEach(c => c.classList.add('flipped'));
         let res = players.map(p => ({ name: p.name, score: p.cards.reduce((s,v)=> s+(isNaN(v)?10:parseInt(v)), 0) })).sort((a,b)=>a.score-b.score);
-        document.getElementById('winner-name').innerText = "الفائز: " + res[0].name;
-        document.getElementById('scores-list').innerHTML = res.map(r => `<div>${r.name}: ${r.score}</div>`).join('');
+        document.getElementById('winner-name').innerText = "🥇 الفائز: " + res[0].name;
+        document.getElementById('scores-list').innerHTML = res.map((r, i) => `<div style="margin: 5px 0;">${i+1}. ${r.name}: <span style="color:var(--neon)">${r.score} نقطة</span></div>`).join('');
         document.getElementById('result-screen').style.display = "block";
     }
 </script>
